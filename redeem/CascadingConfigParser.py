@@ -203,9 +203,12 @@ class CascadingConfigParser(ConfigObj):
 
     def save(self, filename):
         """ Save the changed settings to local.cfg """
-        
-        # get a copy of the currently hard-coded configs
-        current = CascadingConfigParser(self.config_files)
+
+        # get a copy of the currently hard-coded configs, remove given filename.
+        config_files = self.config_files[:]
+        if filename in config_files:
+            config_files.remove(filename)
+        current = CascadingConfigParser(config_files)
         
         # get a flat list of all entries in the live config
         items = []
