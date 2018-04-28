@@ -34,7 +34,7 @@ class M119(GCodeCommand):
             
             self.printer.path_planner.wait_until_done()
             # Update the config.
-            self.printer.config.set('Endstops', 'invert_'+es, str(val))
+            self.printer.config['Endstops']['invert_'+es] = str(val)
 
             # Save the config file. 
             self.printer.config.save(os.path.join(self.printer.config_location,'local.cfg'))

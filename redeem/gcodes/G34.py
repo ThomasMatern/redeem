@@ -92,7 +92,7 @@ class G34(GCodeCommand):
 
         # store the results
         if not g.has_letter("S"):
-            self.printer.config.set('Probe', 'offset_z', str(z_offset / 1000.))
+            self.printer.config['Probe']['offset_z'] = str(z_offset / 1000.)
 
         logging.debug("Probe tip Z offset measurement finished")
 

@@ -187,20 +187,15 @@ class Printer:
     def save_settings(self, filename):
         logging.debug("save_settings: setting stepper parameters")
         for name, stepper in iteritems(self.steppers):
-            self.config.set('Steppers', 'in_use_' + name, str(stepper.in_use))
-            self.config.set('Steppers', 'direction_' + name, str(stepper.direction))
-            self.config.set('Endstops', 'has_' + name, str(stepper.has_endstop))
-            self.config.set('Steppers', 'current_' + name, str(stepper.current_value))
-            self.config.set('Steppers', 'steps_pr_mm_' + name, str(stepper.steps_pr_mm))
-            self.config.set('Steppers', 'microstepping_' + name, str(stepper.microstepping))
-            self.config.set('Steppers', 'slow_decay_' + name, str(stepper.decay))
-            self.config.set('Steppers', 'slave_' + name, str(self.slaves[name]))
-
-        logging.debug("save_settings: setting heater parameters")
-        for name, heater in iteritems(self.heaters):
-            self.config.set('Heaters', 'pid_Kp_'+name, str(heater.Kp))
-            self.config.set('Heaters', 'pid_Ti_'+name, str(heater.Ti))
-            self.config.set('Heaters', 'pid_Td_'+name, str(heater.Td))
+            name_lower = name.lower()
+            self.config['Steppers']['in_use_' + name_lower] = str(stepper.in_use)
+            self.config['Steppers']['direction_' + name_lower] = str(stepper.direction)
+            self.config['Endstops']['has_' + name_lower] = str(stepper.has_endstop)
+            self.config['Steppers']['current_' + name_lower] = str(stepper.current_value)
+            self.config['Steppers']['steps_pr_mm_' + name_lower] = str(stepper.steps_pr_mm)
+            self.config['Steppers']['microstepping_' + name_lower] = str(stepper.microstepping)
+            self.config['Steppers']['slow_decay_' + name_lower] = str(stepper.decay)
+            self.config['Steppers']['slave_' + name_lower] = str(self.slaves[name])
 
         logging.debug("save_settings: saving bed compensation matrix")
         # Bed compensation
@@ -209,17 +204,17 @@ class Printer:
         # Offsets
         logging.debug("save_settings: setting offsets")
         for axis, offset in iteritems(self.path_planner.center_offset):
-            self.config.set('Geometry', "offset_{}".format(axis), str(offset))
+            self.config['Geometry']['offset_{}'.format(axis.lower())] = str(offset)
         # Travel length
         logging.debug("save_settings: travel length")
         for axis, offset in iteritems(self.path_planner.travel_length):
-            self.config.set('Geometry', "travel_{}".format(axis), str(offset))
+            self.config['Geometry']['travel_{}'.format(axis.lower())] = str(offset)
 
         # Save Delta config
         logging.debug("save_settings: setting delta config")
         opts = ["L", "r", "A_radial", "B_radial", "C_radial", "A_angular", "B_angular", "C_angular" ]
         for opt in opts:
-            self.config.set('Delta', opt, str(Delta.__dict__[opt]))
+            self.config['Delta'][opt] = str(getattr(Delta, opt))
 
         logging.debug("save_settings: saving config to file")
         self.config.save(filename)
@@ -237,7 +232,7 @@ class Printer:
         mat = json.dumps(self.matrix_bed_comp.tolist())
         # Only update if they are different
         if mat != self.config.get('Geometry', 'bed_compensation_matrix'):
-            self.config.set('Geometry', 'bed_compensation_matrix', mat)
+            self.config['Geometry']['bed_compensation_matrix'] = mat
             
     def resend_alarms(self):
         """ send all alarms that are in the alarms queue """

@@ -51,8 +51,8 @@ class G134(GCodeCommand):
                 new = self.printer.path_planner.center_offset[axis.upper()]
                 logging.debug("Updating offset for " + axis +
                               " from " + str(old) + " to " + str(new))
-                self.printer.config.set('Geometry', 'offset_' + axis.lower(),
-                                        str(self.printer.path_planner.center_offset[axis.upper()]))
+                self.printer.config['Geometry']['offset_' + axis.lower()] = \
+                                        str(self.printer.path_planner.center_offset[axis.upper()])
 
     def get_description(self):
         return "Use the current head poition as offsets"

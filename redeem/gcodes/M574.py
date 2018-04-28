@@ -33,7 +33,7 @@ class M574(GCodeCommand):
             self.printer.end_stops[es].stops = config
 
             # Update the config.
-            self.printer.config.set('Endstops', 'end_stop_'+es+'_stops', config)
+            self.printer.config['Endstops']['end_stop_'+es+'_stops'] = config
 
             # Save the config file. 
             self.printer.config.save(os.path.join(self.printer.config_location,'local.cfg'))

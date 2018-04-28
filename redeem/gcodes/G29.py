@@ -110,7 +110,7 @@ class G29_1(GCodeCommand):  # was G29C[ircle]
 
         # Reset probe points
         self.printer.probe_points = []
-        self.printer.config.set("Macros", "G29", gcodes)
+        self.printer.config["Macros"]["G29"] = gcodes
         Alarm.action_command("new_g29", json.dumps(gcodes))
 
     def get_description(self):
@@ -173,7 +173,7 @@ class G29_2(GCodeCommand):  # was G29S[quare]
             gcodes += "    M561 S; Show the current matrix\n"
         gcodes += "    M500; (RFS) Save data\n"
 
-        self.printer.config.set("Macros", "G29", gcodes)
+        self.printer.config['Macros']['G29'] = gcodes
         Alarm.action_command("new_g29", json.dumps(gcodes))
 
     def get_description(self):
