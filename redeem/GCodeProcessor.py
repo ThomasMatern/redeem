@@ -125,6 +125,17 @@ class GCodeProcessor:
             logging.error(traceback.format_exc(sys.exc_info()[2]))
         return gcode
 
+    def execute_macro(self, gcodes, parent=None):
+        self.printer.path_planner.wait_until_done()
+        for gcode in gcodes:
+            gcode = gcode.strip()
+            if not gcode:
+                continue
+            G = Gcode({"message": gcode, "parent": parent})
+            self.resolve(G)
+            self.execute(G)
+            self.printer.path_planner.wait_until_done()
+
     def enqueue(self, gcode):
         self.resolve(gcode)
 

@@ -37,11 +37,7 @@ class G33(GCodeCommand):
 
         # we reuse the G29 macro for the autocalibration purposes
         gcodes = self.printer.config.get("Macros", "G29").split("\n")
-        self.printer.path_planner.wait_until_done()
-        for gcode in gcodes:
-            G = Gcode({"message": gcode, "parent": g})
-            self.printer.processor.execute(G)
-            self.printer.path_planner.wait_until_done()
+        self.printer.processor.execute_macro(gcodes=gcodes, parent=g)
 
         # adjust probe heights
         probe_z_coords = np.array(

@@ -17,11 +17,7 @@ class G31(GCodeCommand):
 
     def execute(self, g):
         gcodes = self.printer.config.get("Macros", "G31").split("\n")
-        self.printer.path_planner.wait_until_done()
-        for gcode in gcodes:        
-            G = Gcode({"message": gcode, "parent": g})
-            self.printer.processor.execute(G)
-            self.printer.path_planner.wait_until_done()
+        self.printer.processor.execute_macro(gcodes=gcodes, parent=g)
 
     def get_description(self):
         return "Dock sled"

@@ -23,20 +23,14 @@ class G29(GCodeCommand):
 
     def execute(self, g):
         gcodes = self.printer.config.get("Macros", "G29").split("\n")
-        self.printer.path_planner.wait_until_done()
-        for gcode in gcodes:
-            # If 'S' (imulate) remove M561 and M500 codes
-            if g.has_letter("S"):
+
+        # If 'S' (imulate) remove M561 and M500 codes
+        if g.has_letter("S"):
+            for gcode in gcodes:
                 if "RFS" in gcode:
                     logging.debug("G29: Removing due to RFS: " + str(gcode))
-                else:
-                    G = Gcode({"message": gcode, "parent": g})
-                    self.printer.processor.execute(G)
-                    self.printer.path_planner.wait_until_done()
-            else:  # Execute all
-                G = Gcode({"message": gcode, "parent": g})
-                self.printer.processor.execute(G)
-                self.printer.path_planner.wait_until_done()
+            gcodes = [gcode for gcode in gcodes if "RFS" not in gcode]
+        self.printer.processor.execute_macro(gcodes=gcodes, parent=g)
 
         probe_data = copy.deepcopy(self.printer.probe_points)
         bed_data = {
