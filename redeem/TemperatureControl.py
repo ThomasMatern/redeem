@@ -168,7 +168,7 @@ class Compare(Unit):
         
         self.input = []
         for i in range(2):
-            self.input.append(options["input-{}".format(i)])
+            self.input.append(options["input_{}".format(i)])
             
         self.counter += 1
             
