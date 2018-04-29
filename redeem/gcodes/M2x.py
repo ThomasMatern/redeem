@@ -310,6 +310,7 @@ class M24(GCodeCommand):
             if not line or line.startswith(';'):
                 continue
             file_g = Gcode({"message": line, "parent": g})
+            self.printer.processor.resolve(file_g)
             self.printer.processor.execute(file_g)
             
         if self.printer.sd_card_manager.get_status():

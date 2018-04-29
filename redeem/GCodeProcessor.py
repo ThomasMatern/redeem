@@ -90,6 +90,9 @@ class GCodeProcessor:
             logging.warning(
                 "tried to resolve a gcode that's already resolved: " + gcode.message)
             logging.error(traceback.format_stack())
+        elif gcode.code() not in self.gcodes:
+            logging.error(
+                "failed to resolve gcode: " + gcode.message)
         else:
             gcode.command = self.gcodes[gcode.code()]
 
